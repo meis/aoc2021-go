@@ -6,6 +6,7 @@ import (
 	"os"
 	"path"
 	"runtime"
+	"strconv"
 	"strings"
 )
 
@@ -19,6 +20,19 @@ func GetInputString() string {
 
 func GetInputStrings() []string {
 	return cleanEmpty(strings.Split(inputChain(), "\n"))
+}
+
+func GetInputInts() []int {
+	s := cleanEmpty(strings.Split(inputChain(), "\n"))
+	var ints []int
+	for _, str := range s {
+		num, err := strconv.Atoi(str)
+		if err != nil {
+			panic(err)
+		}
+		ints = append(ints, num)
+	}
+	return ints
 }
 
 // We usually want the input from a file called "input", but its useful
