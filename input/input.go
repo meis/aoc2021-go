@@ -11,7 +11,7 @@ import (
 )
 
 func GetInputChars() []string {
-	return cleanEmpty(strings.Split(inputChain(), ""))
+	return CleanEmpty(strings.Split(inputChain(), ""))
 }
 
 func GetInputString() string {
@@ -19,11 +19,11 @@ func GetInputString() string {
 }
 
 func GetInputStrings() []string {
-	return cleanEmpty(strings.Split(inputChain(), "\n"))
+	return CleanEmpty(strings.Split(inputChain(), "\n"))
 }
 
 func GetInputInts() []int {
-	s := cleanEmpty(strings.Split(inputChain(), "\n"))
+	s := CleanEmpty(strings.Split(inputChain(), "\n"))
 	var ints []int
 	for _, str := range s {
 		num, err := strconv.Atoi(str)
@@ -33,6 +33,16 @@ func GetInputInts() []int {
 		ints = append(ints, num)
 	}
 	return ints
+}
+
+func CleanEmpty(s []string) []string {
+	var r []string
+	for _, str := range s {
+		if str != "" {
+			r = append(r, str)
+		}
+	}
+	return r
 }
 
 // We usually want the input from a file called "input", but its useful
@@ -77,14 +87,4 @@ func inputFileIn(callerFilename string) (string, error) {
 	}
 
 	return string(bytes), nil
-}
-
-func cleanEmpty(s []string) []string {
-	var r []string
-	for _, str := range s {
-		if str != "" {
-			r = append(r, str)
-		}
-	}
-	return r
 }
