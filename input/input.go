@@ -35,6 +35,20 @@ func GetInputInts() []int {
 	return ints
 }
 
+func GetInputIntsInOneLine() []int {
+	file := CleanEmpty(strings.Split(inputChain(), "\n"))
+	s := strings.Split(file[0], ",")
+	var ints []int
+	for _, str := range s {
+		num, err := strconv.Atoi(str)
+		if err != nil {
+			panic(err)
+		}
+		ints = append(ints, num)
+	}
+	return ints
+}
+
 func CleanEmpty(s []string) []string {
 	var r []string
 	for _, str := range s {
