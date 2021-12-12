@@ -2,11 +2,12 @@ package main
 
 import "strings"
 
-type graph map[string]node
+type Graph map[string]node
 type node map[string]bool
+type visitedCache []string
 
-func newGraph(links []string) graph {
-	g := make(graph)
+func NewGraph(links []string) Graph {
+	g := make(Graph)
 
 	for _, l := range links {
 		parts := strings.Split(l, "-")
@@ -31,22 +32,44 @@ func newGraph(links []string) graph {
 	return g
 }
 
-func (g graph) getPathsFrom(cave string, maxSmallCaveVisits int, previousPath path) []path {
-	previousPath = append(previousPath, cave)
-	var paths []path
+func (g Graph) GetPathsFromStart(maxSmallCaveVisits int) int {
+	return g.getPathsFromRec("start", maxSmallCaveVisits, visitedCache{})
+}
+
+func (g Graph) getPathsFromRec(cave string, maxSmallCaveVisits int, smallCavesVisited visitedCache) int {
+	if cave[0] > 97 {
+		smallCavesVisited = append(smallCavesVisited, cave)
+	}
 
 	if cave == "end" {
-		paths = append(paths, previousPath)
-		return paths
-	} else if cave == "start" && len(previousPath) > 1 {
-		return paths
-	} else if cave[0] > 97 && previousPath.countDoubleSmallCaves() > maxSmallCaveVisits {
-		return paths
+		return 1
+	} else if cave == "start" && len(smallCavesVisited) > 1 {
+		return 0
+	} else if cave[0] > 97 && smallCavesVisited.countDoubleSmallCaves() > maxSmallCaveVisits {
+		return 0
 	} else {
-		for k := range g[cave] {
-			paths = append(paths, g.getPathsFrom(k, maxSmallCaveVisits, previousPath)...)
+		nextPaths := 0
+		for next := range g[cave] {
+			nextPaths += g.getPathsFromRec(next, maxSmallCaveVisits, smallCavesVisited)
 		}
 
-		return paths
+		return nextPaths
 	}
+}
+
+func (cache visitedCache) countDoubleSmallCaves() int {
+	small := make(map[string]int)
+	count := 0
+
+	for _, c := range cache {
+		v := small[c]
+
+		if v > 0 {
+			count += v
+		}
+
+		small[c]++
+	}
+
+	return count
 }

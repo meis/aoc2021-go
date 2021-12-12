@@ -14,13 +14,13 @@ func main() {
 }
 
 func part1(in []string) int {
-	g := newGraph(in)
+	g := NewGraph(in)
 
-	return len(g.getPathsFrom("start", 0, path{}))
+	return g.GetPathsFromStart(0)
 }
 
 func part2(in []string) int {
-	g := newGraph(in)
+	g := NewGraph(in)
 
-	return len(g.getPathsFrom("start", 1, path{}))
+	return g.GetPathsFromStart(1)
 }
